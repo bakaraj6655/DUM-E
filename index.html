@@ -603,10 +603,17 @@ async function confirmSave() {
   if (!pendingGame) return;
   document.getElementById('thinking').textContent = 'saving...';
   try {
-    const gameData = { ...pendingGame, player: 'Kaju' };
-if ('error_CAGE' in gameData) { gameData.error_cage = gameData.error_CAGE; delete gameData.error_CAGE; }
-if ('error_CAGE_detail' in gameData) { gameData.error_cage_detail = gameData.error_CAGE_detail; delete gameData.error_CAGE_detail; }
-await sbFetch('/rest/v1/games', 'POST', gameData);
+    const raw = { ...pendingGame, player: 'Kaju' };
+    const gameData = {
+      player: raw.player, color: raw.color, result: raw.result,
+      game_type: raw.game_type, opponent_rating: raw.opponent_rating,
+      opening_played: raw.opening_played, mental_state: raw.mental_state,
+      kaju_thoughts: raw.kaju_thoughts, turning_point: raw.turning_point,
+      blunder_moment: raw.blunder_moment, opponent_surprise: raw.opponent_surprise,
+      error_cage: raw.error_CAGE || raw.error_cage || false,
+      error_cage_detail: raw.error_CAGE_detail || raw.error_cage_detail || null
+    };
+    await sbFetch('/rest/v1/games', 'POST', gameData);
     document.getElementById('thinking').textContent = 'saved. beep. 🤖';
     clearInput();
     pendingGame = null;

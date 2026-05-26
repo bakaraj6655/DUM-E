@@ -1,6 +1,13 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-  const { prompt } = req.body;
+  
+  let body = '';
+  await new Promise((resolve) => {
+    req.on('data', chunk => body += chunk);
+    req.on('end', resolve);
+  });
+  const { prompt } = JSON.parse(body || '{}');
+  
   if (!prompt) return res.status(400).json({ error: 'No prompt' });
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_KEY}`, {

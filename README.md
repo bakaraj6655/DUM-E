@@ -67,4 +67,4 @@ create policy "allow all" on learn_logs for all using (true) with check (true);
 
 ---
 
-*Built with Claude (Jarvis). Second project by Kaju.*
+*Built with Claude (Jarvis). First project by Raj.*
